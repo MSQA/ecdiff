@@ -6,6 +6,9 @@
 
 package com.github.empty125.ecdiff;
 
+import java.text.SimpleDateFormat;
+import java.util.Date;
+
 /**
  *
  * @author xilei
@@ -13,20 +16,26 @@ package com.github.empty125.ecdiff;
 public class Job {
     
     // src filename
-    public String src = "";
+    private String src = "";
     //dist filename
-    public String dist = "";
+    private String dist = "";
     
     // id column
-    public  int  srcColumnIdIndex = 0;
+    private  int  srcColumnIdIndex = 0;
     
     // id column
-    public int  distColumnIdIndex = 0;
+    private int  distColumnIdIndex = 0;
     
     // the column which need comparing
-    public int srcColumnIndex = 0;
+    private int srcColumnIndex = 0;
     // the column which need comparing
-    public int distColumnIndex = 0;
+    private int distColumnIndex = 0;
+    
+    private  int srcSheet = 0;
+    
+    private  int distSheet = 0;  
+    
+    private String _outfile = "";
     
       
     public Job() {
@@ -57,7 +66,11 @@ public class Job {
     }
 
     public void setDist(String dist) {
-        this.dist = dist;
+         int dot = dist.lastIndexOf('.');
+         String base = (dot == -1) ? dist : dist.substring(0, dot);
+         String extension = (dot == -1) ? "" : dist.substring(dot+1);
+         this._outfile =  base+"-"+(new SimpleDateFormat("YYYYMMddHHmmss").format(new Date()))+"."+extension;
+         this.dist = dist;
     }
 
     public int getSrcColumnIdIndex() {
@@ -91,5 +104,25 @@ public class Job {
     public void setDistColumnIndex(int distColumnIndex) {
         this.distColumnIndex = distColumnIndex;
     }  
+    
+    public int getSrcSheet() {
+        return srcSheet;
+    }
+
+    public void setSrcSheet(int srcSheet) {
+        this.srcSheet = srcSheet;
+    }
+
+    public int getDistSheet() {
+        return distSheet;
+    }
+
+    public void setDistSheet(int disSheet) {
+        this.distSheet = disSheet;
+    }
+    
+    public String getOutFileName(){
+        return _outfile;
+    }
 
 }

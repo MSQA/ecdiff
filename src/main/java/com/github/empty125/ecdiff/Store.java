@@ -8,7 +8,7 @@ package com.github.empty125.ecdiff;
 
 import java.util.HashMap;
 import org.apache.commons.codec.digest.DigestUtils;
-import org.apache.poi.hssf.usermodel.HSSFCell;
+import org.apache.poi.ss.usermodel.Cell;
 
 /**
  * 
@@ -16,13 +16,13 @@ import org.apache.poi.hssf.usermodel.HSSFCell;
  */
 public class Store {
     
-        protected HashMap<String,HSSFCell> cells = new HashMap<>();
+        protected HashMap<String,Cell> cells = new HashMap<>();
         
-        public void put(String key,HSSFCell cell){
+        public void put(String key,Cell cell){
                 cells.put(hk(key), cell);            
         }        
         
-        public HSSFCell get(String key){
+        public Cell get(String key){
                return cells.get(hk(key));
         }
         
