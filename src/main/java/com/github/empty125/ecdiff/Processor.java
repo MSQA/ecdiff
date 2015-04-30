@@ -58,8 +58,10 @@ public class Processor {
             try (FileOutputStream out = new FileOutputStream(job.getOutFileName())) {
                 wb.write(out);
             }
+            logger.info("output file:"+job.getOutFileName());
         } catch (Exception e) {
-                e.printStackTrace();
+                logger.fatal(e.getMessage(),e);
+//                e.printStackTrace();
         }
     }
     
@@ -118,7 +120,7 @@ public class Processor {
                     .equals(getStringCellValue(src_cell))){
                     CellStyle style = dist_cell.getCellStyle();
                     style.setFont(this.font);
-                   //dist_cell.setCellStyle(style);
+                    dist_cell.setCellStyle(style);
             }
             return true;
     }
