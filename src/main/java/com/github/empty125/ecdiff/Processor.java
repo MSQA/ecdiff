@@ -5,6 +5,7 @@
  */
 package com.github.empty125.ecdiff;
 
+import java.io.File;
 import java.io.FileInputStream;
 import java.io.FileOutputStream;
 import java.io.IOException;
@@ -46,14 +47,22 @@ public class Processor {
             logger.info("Dist,open "+sheet.getSheetName()+" with "+rows_len+" rows");
             for(i=0;i<rows_len;i++){
                    Row row = sheet.getRow(i);
-                   String idKey = "";
                    max_cells_len = row.getPhysicalNumberOfCells();
                    if(!job.checkDistIndex(max_cells_len)){
                            logger.warn("Dist,The length of columns is too small at row "+i+",length:"+max_cells_len);
                            continue;
                    }
-                   idKey = getStringCellValue(row.getCell(job.getDistColumnIdIndex()));
-                   cellComparer(store.get(idKey),row.getCell(job.getDistColumnIndex()));       
+                   if(job.isByrow()){
+                       cellComparer(
+                           store.get(i),
+                           row.getCell(job.getDistColumnIndex())
+                        ); 
+                   }else{
+                       cellComparer(
+                           store.get(getStringCellValue(row.getCell(job.getDistColumnIdIndex()))),
+                           row.getCell(job.getDistColumnIndex())
+                        ); 
+                   }
             }
             try (FileOutputStream out = new FileOutputStream(job.getOutFileName())) {
                 wb.write(out);
@@ -68,12 +77,12 @@ public class Processor {
     
    public Store getStoreFromSrc() throws IOException{
         Workbook wb = readExcelFileByext(job.getSrc()); 
-        Store store = new Store();
         Row row = null;
         int max_cells_len = 0;
         int rows_len = 0;
         Sheet sheet = wb.getSheetAt(job.getSrcSheet());            
-        rows_len = sheet.getPhysicalNumberOfRows();            
+        rows_len = sheet.getPhysicalNumberOfRows(); 
+        Store store = new Store(rows_len);
         logger.info("Src,open "+sheet.getSheetName()+" with "+rows_len+" rows");
         for(int i=0;i<rows_len;i++){
                     row = sheet.getRow(i);
@@ -82,23 +91,30 @@ public class Processor {
                             logger.warn("Src,The length of columns is too small at row "+i+",length:"+max_cells_len);
                             continue;
                     }
-                    store.put(
-                            getStringCellValue(row.getCell(job.getSrcColumnIdIndex())),
-                            row.getCell(job.getSrcColumnIndex())
-                    );
+                    if(job.isByrow()){
+                        store.put(
+                                i,
+                                row.getCell(job.getSrcColumnIndex())
+                        );
+                    }else{
+                        store.put(
+                                getStringCellValue(row.getCell(job.getSrcColumnIdIndex())), 
+                                row.getCell(job.getSrcColumnIndex())
+                        );
+                    }
         }
         return store;
    }
    
-   private Workbook readExcelFileByext(String filename) throws IOException{
-            String ext = getExt(filename);
+   private Workbook readExcelFileByext(File file) throws IOException{
+            String ext = getExt(file.getName());
             Workbook wb = null;
             switch(ext){
                 case "xls":
-                        wb = new HSSFWorkbook(new FileInputStream(filename));
+                        wb = new HSSFWorkbook(new FileInputStream(file));
                         break;
                 case "xlsx":
-                        wb = new XSSFWorkbook(new FileInputStream(filename));
+                        wb = new XSSFWorkbook(new FileInputStream(file));
                         break;
                  default:
                      throw new IOException("Does not recognize the extension:"+ext);

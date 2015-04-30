@@ -18,10 +18,10 @@ import org.kohsuke.args4j.Option;
  */
 public class Job {
     
-    // src filename    
-    private String src = "";
-    //dist filename  
-    private String dist = "";
+    // src file    
+    private File src = null;
+    //dist file  
+    private File dist = null;
     
     // id column    
     private  int  srcColumnIdIndex = 0;
@@ -49,27 +49,26 @@ public class Job {
     }
     
     public boolean checkDistIndex(int maxLen){
-            return maxLen>= getDistColumnIdIndex()
+            return (this.isByrow() || maxLen>= getDistColumnIdIndex()) 
                     && maxLen>= getDistColumnIndex();
                                      
     }
     
     public boolean checkSrcIndex(int maxLen){
-            return maxLen>= getSrcColumnIdIndex()
+            return(this.isByrow() || maxLen>= getSrcColumnIdIndex())
                     && maxLen>=getSrcColumnIndex();  
     }
     
-    public String getSrc() {
+    public File getSrc() {
         return src;
     }
     
     @Option(name="-a",required = true, usage ="the first excel file")
     public void setSrc(String src) throws IOException {
-        checkFile(src);
-        this.src = src;
+        this.src = checkFile(src);
     }
 
-    public String getDist() {
+    public File getDist() {
         return dist;
     }
     
@@ -80,7 +79,7 @@ public class Job {
          String base = (dot == -1) ? dist : dist.substring(0, dot);
          String extension = (dot == -1) ? "" : dist.substring(dot+1);
          this._outfile =  base+"-"+(new SimpleDateFormat("YYYYMMddHHmmss").format(new Date()))+"."+extension;
-         this.dist = dist;
+         this.dist = checkFile(dist);
     }
 
     public int getSrcColumnIdIndex() {
@@ -149,7 +148,7 @@ public class Job {
         return _outfile;
     }
     
-    public static void checkFile(String filename) throws IOException{
+    public static File checkFile(String filename) throws IOException{
         File f = new File(filename);
         if(!f.exists()){
                 throw new IOException("File "+filename+" not found");
@@ -160,6 +159,7 @@ public class Job {
         if(!filename.endsWith(".xlsx") && !filename.endsWith(".xls")){
                throw new IOException("File "+filename+" not a valid excel file");
         }
+        return f;
     }
     
 }
