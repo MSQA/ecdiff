@@ -3,7 +3,7 @@
  * @author  xilei
  * @license http://www.apache.org/licenses/LICENSE-2.0
  */
-package com.github.empty125.ecdiff;
+package com.github.xiilei.ecdiff;
 
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;

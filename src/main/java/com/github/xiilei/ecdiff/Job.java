@@ -4,7 +4,7 @@
  * @license http://www.apache.org/licenses/LICENSE-2.0
  */
 
-package com.github.empty125.ecdiff;
+package com.github.xiilei.ecdiff;
 
 import java.io.File;
 import java.io.IOException;

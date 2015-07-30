@@ -4,8 +4,9 @@
  * @license http://www.apache.org/licenses/LICENSE-2.0
  */
 
-package com.github.empty125.ecdiff;
+package com.github.xiilei.ecdiff;
 
+import com.github.xiilei.ecdiff.Job;
 import java.io.IOException;
 import org.junit.Test;
 
@@ -24,8 +25,8 @@ public class ProcessorTest{
                job.setDist("src/test/resources/test_2.xlsx");
                job.setDistColumnIdIndex(0);
                job.setDistColumnIndex(1);
-               //Processor  processor = new Processor(job);        
-               //processor.diff();
+               Processor  processor = new Processor(job);        
+               processor.diff();
         }
 
 }
